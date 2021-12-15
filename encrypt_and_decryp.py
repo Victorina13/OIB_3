@@ -3,13 +3,22 @@ from cryptography.hazmat.primitives import padding as pd
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
 
+
 def encryption(setting, iv):
+    """
+    Функция шифрования текста
+    :param setting:dict
+    Словарь, содержащий в себе файлы
+    :param iv:bytes
+    Значение для инициализации блочного режима
+    :return:None
+    """
     with open(setting['symmetric_key'], mode='rb') as key_file:
         key = key_file.read()
     ds_key = decryption_key(setting, key)
     with open(setting['initial_file'], 'r', encoding='UTF-8') as f:
         res = f.read()
-        print("Start text")
+        print("The original text:")
         print(res)
     pad = pd.ANSIX923(128).padder()
     text = bytes(res, 'UTF-8')
@@ -17,13 +26,21 @@ def encryption(setting, iv):
     cipher = Cipher(algorithms.Camellia(ds_key), modes.CBC(iv))
     encryptr = cipher.encryptor()
     encryp_text = encryptr.update(padded_text) + encryptr.finalize()
+    print("Encrypted text:")
     print(encryp_text)
     with open(setting['encrypted_file'], 'wb') as encryp_file:
         encryp_file.write(encryp_text)
 
 
 def decryption(setting: dict, iv: bytes):
-
+    """
+    Функция дешифрования текста
+    :param setting:dict
+    Словарь, содержащий в себе файлы
+    :param iv:bytes
+    Значение для инициализации блочного режима
+    :return:None
+    """
     with open(setting['symmetric_key'], mode='rb') as key_file:
         key = key_file.read()
     ds_key = decryption_key(setting, key)
@@ -35,7 +52,7 @@ def decryption(setting: dict, iv: bytes):
     unpad = pd.ANSIX923(128).unpadder()
     unpadded_dc_text = unpad.update(dc_text) + unpad.finalize()
     res = unpadded_dc_text.decode('UTF-8')
-    print("Decryption text")
+    print("Decryption text:")
     print(res)
     with open(setting['decrypted_file'], 'w') as dec_file:
         dec_file.write(res)

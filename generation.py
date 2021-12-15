@@ -7,6 +7,13 @@ from cryptography.hazmat.primitives import hashes
 
 
 def generation_key(setting, key_size):
+    """ Функция генерации симметричного и асимметоричных ключей
+     :parameter setting:dict
+     Словарь, содержащий в себе файлы
+     :parameter key_size:int
+     Размер симметричного ключа
+     :return: None
+     """
     symmetric_key = os.urandom(key_size)
     print("Symmetric key generated")
     asymmetric_keys = rsa.generate_private_key(
@@ -30,10 +37,14 @@ def generation_key(setting, key_size):
 
 
 def encryption_key(setting):
-
+    """
+    Функция шифрования симметричного ключа
+    :param setting:dict
+    Словарь, содержащий в себе файлы
+    :return: None
+    """
     with open(setting['symmetric_key'], 'rb') as key_file:
         symmetric_key = key_file.read()
-
 
     with open(setting['public_key'], 'rb') as pem_in:
         public_bytes = pem_in.read()
@@ -49,6 +60,14 @@ def encryption_key(setting):
 
 
 def decryption_key(setting, symmetric_key):
+    """
+    Функция дешифрования симметричного ключа
+    :param setting:dict
+    Словарь, содержащий в себе файлы
+    :param symmetric_key:
+    Симметричный ключ
+    :return:Дешифрованный симметричный ключ
+    """
     with open(setting['private_key'], 'rb')as pem_in:
         private_bytes = pem_in.read()
     d_private_key = load_pem_private_key(private_bytes, password=None,)
@@ -56,4 +75,3 @@ def decryption_key(setting, symmetric_key):
                                                                              algorithm=hashes.SHA256(),
                                                                              label=None))
     return symmetric_decryp_key
-
