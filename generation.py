@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
-def generation(setting, key_size):
+def generation_key(setting, key_size):
     symmetric_key = os.urandom(key_size)
     print("Symmetric key generated")
     asymmetric_keys = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -48,7 +48,6 @@ def decryption_key(setting, symmetric_key):
     d_private_key = load_pem_private_key(private_bytes, password=None,)
     symmetric_decryp_key = d_private_key.decrypt(symmetric_key, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(),
                                                 label=None))
-    print(symmetric_decryp_key)
     return symmetric_decryp_key
 
 
