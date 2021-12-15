@@ -1,4 +1,4 @@
-from generation import generation
+from generation import generation, encryption_key
 if __name__=='__main__':
     setting={
         'symmetric_key':'symmetric_key.txt',
@@ -7,3 +7,4 @@ if __name__=='__main__':
 
     }
     generation(setting,16)
+    encryption_key(setting)
